@@ -1,13 +1,12 @@
 MPU-6050 Python
 
-This program handles the I2C communication between a Raspberry Pi and a MPU-6050 Gyroscope/Accelerometer sensor.
+This program handles the I2C communication between an Onion Omega and a MPU-6050 Gyroscope/Accelerometer sensor.
 
-For this program to work you need to have I2C enabled on your Raspberry Pi and you need to have the python-smbus package installed.
+For this to work you will need the Omega I2C libraries and python installed:
+```
+opkg update && opkg install python-light pyOnionI2C
+```
 
-This project is available on pypi: https://pypi.python.org/pypi/mpu6050-raspberrypi/
+This is a very slight modification to the Raspberry Pi MPU-6050 code by Martijn Tijndagamer, which is available on [GitHub](https://github.com/Tijndagamer/mpu6050)
 
-Installation
-
-You can install this module by executing the following command:
-
-    sudo pip install mpu6050-raspberrypi
+Please note that I have modified only the MPU-6050 Python module itself, not any of the packaging or metadata, so this will not correctly build for install with pip.

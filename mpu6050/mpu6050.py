@@ -5,14 +5,14 @@ Released under the MIT License
 Copyright 2015
 """
 
-import smbus
+from OmegaExpansion import onionI2C
 
 class mpu6050:
 
     # Global Variables
     GRAVITIY_MS2 = 9.80665
     address = None
-    bus = smbus.SMBus(1)
+    bus = onionI2C.OnionI2C()
 
     # Scale Modifiers
     ACCEL_SCALE_MODIFIER_2G = 16384.0
@@ -69,7 +69,7 @@ class mpu6050:
         self.address = address
 
         # Wake up the MPU-6050 since it starts in sleep mode
-        self.bus.write_byte_data(self.address, self.PWR_MGMT_1, 0x00)
+        self.bus.writeByte(self.address, self.PWR_MGMT_1, 0x00)
 
     # I2C communication methods
 
@@ -80,8 +80,9 @@ class mpu6050:
         Returns the combined read results.
         """
         # Read the data from the registers
-        high = self.bus.read_byte_data(self.address, register)
-        low = self.bus.read_byte_data(self.address, register + 1)
+        data = self.bus.readBytes(self.address, register, 2)
+        high = data[0]
+        low = data[1]
 
         value = (high << 8) + low
 
@@ -112,10 +113,10 @@ class mpu6050:
         pre-defined range is advised.
         """
         # First change it to 0x00 to make sure we write the correct value later
-        self.bus.write_byte_data(self.address, self.ACCEL_CONFIG, 0x00)
+        self.bus.writeByte(self.address, self.ACCEL_CONFIG, 0x00)
 
         # Write the new range to the ACCEL_CONFIG register
-        self.bus.write_byte_data(self.address, self.ACCEL_CONFIG, accel_range)
+        self.bus.writeByte(self.address, self.ACCEL_CONFIG, accel_range)
 
     def read_accel_range(self, raw = False):
         """Reads the range the accelerometer is set to.
@@ -125,7 +126,7 @@ class mpu6050:
         If raw is False, it will return an integer: -1, 2, 4, 8 or 16. When it
         returns -1 something went wrong.
         """
-        raw_data = self.bus.read_byte_data(self.address, self.ACCEL_CONFIG)
+        raw_data = self.bus.readBytes(self.address, self.ACCEL_CONFIG, 1)[0]
 
         if raw is True:
             return raw_data
@@ -186,10 +187,10 @@ class mpu6050:
         range is advised.
         """
         # First change it to 0x00 to make sure we write the correct value later
-        self.bus.write_byte_data(self.address, self.GYRO_CONFIG, 0x00)
+        self.bus.writeBytes(self.address, self.GYRO_CONFIG, 0x00)
 
         # Write the new range to the ACCEL_CONFIG register
-        self.bus.write_byte_data(self.address, self.GYRO_CONFIG, gyro_range)
+        self.bus.writeBytes(self.address, self.GYRO_CONFIG, gyro_range)
 
     def read_gyro_range(self, raw = False):
         """Reads the range the gyroscope is set to.
@@ -199,7 +200,7 @@ class mpu6050:
         If raw is False, it will return 250, 500, 1000, 2000 or -1. If the
         returned value is equal to -1 something went wrong.
         """
-        raw_data = self.bus.read_byte_data(self.address, self.GYRO_CONFIG)
+        raw_data = self.bus.readBytes(self.address, self.GYRO_CONFIG, 1)[0]
 
         if raw is True:
             return raw_data
@@ -248,19 +249,19 @@ class mpu6050:
     def get_all_data(self):
         """Reads and returns all the available data."""
         temp = get_temp()
-        accel = get_accel_data()
+        accel = get_accel_data
         gyro = get_gyro_data()
 
         return [accel, gyro, temp]
 
 if __name__ == "__main__":
-    mpu = MPU6050(0x68)
-    print(mpu.get_temp())
+    mpu = mpu6050(0x68)
+    print("Temp:    " + str(mpu.get_temp()) + "\n")
     accel_data = mpu.get_accel_data()
-    print(accel_data['x'])
-    print(accel_data['y'])
-    print(accel_data['z'])
+    print("Accel X: " + str(accel_data['x']))
+    print("Accel Y: " + str(accel_data['y']))
+    print("Accel Z: " + str(accel_data['z']) + "\n")
     gyro_data = mpu.get_gyro_data()
-    print(gyro_data['x'])
-    print(gyro_data['y'])
-    print(gyro_data['z'])
+    print("Gyro X:  " + str(gyro_data['x']))
+    print("Gyro Y:  " + str(gyro_data['y']))
+    print("Gyro Z:  " + str(gyro_data['z']))
