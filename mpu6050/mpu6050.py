@@ -1,6 +1,8 @@
 """This program handles the communication over I2C
-between a Raspberry Pi and a MPU-6050 Gyroscope / Accelerometer combo.
+between an Onion Omega and a MPU-6050 Gyroscope / Accelerometer combo.
+Based on code for the Raspberry Pi
 Made by: MrTijn/Tijndagamer
+Adapted for Onion by: Ronald McCollam
 Released under the MIT License
 Copyright 2015
 """
