@@ -251,7 +251,7 @@ class mpu6050:
     def get_all_data(self):
         """Reads and returns all the available data."""
         temp = get_temp()
-        accel = get_accel_data
+        accel = get_accel_data()
         gyro = get_gyro_data()
 
         return [accel, gyro, temp]
